@@ -36,12 +36,12 @@ with st.expander(" Example Queries"):
     st.divider()
 
 #  User Input
-st.markdown("### 📋 Paste a **job description** or **skill query** below to get tailored SHL test suggestions:")
+st.subheader("📋 Paste job/skills to get SHL test suggestions")
 user_query = st.text_area("🧑‍💻 Job Description or Role Query", height=150)
 st.divider()
 
 # 🎚 Slider & filters
-st.markdown("###  How many recommendations do you want?")
+st.subheader(" How many recommendations do you want?")
 top_k = st.slider("", min_value=1, max_value=10, value=5)
 
 remote_only = st.checkbox(" Only show Remote-enabled tests")
@@ -77,7 +77,7 @@ if st.button(" Recommend Assessments") and user_query.strip():
         #  Final Display
         if results:
             st.divider()
-            st.markdown("## 🔎 Top Recommendations")
+            st.subheader("🔎 Top Recommendations")
             st.dataframe(pd.DataFrame(results).drop(columns=["Score"]))
         else:
             st.warning("⚠️ No assessments matched your filters. Try relaxing the filters or modifying the query.")
