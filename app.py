@@ -2,28 +2,32 @@ import streamlit as st
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 
-# Load SHL assessments from CSV
+# Load SHL assessments
 df = pd.read_csv("shl_assessments.csv")
 
-# Fill NaN values (if any)
+# Strip column names to avoid KeyErrors
+df.columns = df.columns.str.strip()
+
+# Fill NaN values
 df.fillna("Not Available", inplace=True)
 
-# Compute embeddings only once and cache
+# Create a new field to embed richer info
+df["Full Description"] = df["Assessment Name"] + " " + df["Test Type"]
+
 @st.cache_data
 def load_embeddings():
     model = SentenceTransformer("all-MiniLM-L6-v2")
-    corpus_embeddings = model.encode(df["Assessment Name"].tolist(), convert_to_tensor=True)
+    corpus_embeddings = model.encode(df["Full Description"].tolist(), convert_to_tensor=True)
     return model, corpus_embeddings
 
 model, corpus_embeddings = load_embeddings()
 
-# Streamlit UI
+# UI
 st.title("🔍 SHL Assessment Recommendation Engine")
-
 user_query = st.text_area("Paste a job description or query here", height=150)
 top_k = st.slider("How many recommendations do you want?", min_value=1, max_value=10, value=5)
 
-if st.button("Recommend Assessments"):
+if st.button("Recommend Assessments") and user_query.strip():
     with st.spinner("Generating recommendations..."):
         query_embedding = model.encode(user_query, convert_to_tensor=True)
         hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=top_k)[0]
@@ -42,4 +46,4 @@ if st.button("Recommend Assessments"):
             })
 
         st.markdown("### 🔎 Top Recommendations")
-        st.dataframe(pd.DataFrame(results).drop(columns=["Score"]))  # Hide score column if not needed
+        st.dataframe(pd.DataFrame(results).drop(columns=["Score"]))
