@@ -2,6 +2,7 @@ from fastapi import FastAPI, Query
 from pydantic import BaseModel
 from typing import List
 import pandas as pd
+import uvicorn
 from sentence_transformers import SentenceTransformer, util
 
 # Step 1: Start FastAPI app
@@ -41,6 +42,10 @@ def recommend(query: str = Query(..., description="Job role or query"), top_k: i
             "adaptive_irt": row["Adaptive/IRT"],
             "test_type": row["Test Type"],
             "duration": row["Duration"]
+            
         }
         results.append(result)
     return results
+
+if __name__ == "__main__":
+    uvicorn.run("api:app", host="0.0.0.0", port=8000)
