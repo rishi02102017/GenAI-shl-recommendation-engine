@@ -49,7 +49,6 @@ simulation_only = st.checkbox(" Only show Simulation-type tests (S)")
 
 #  Trigger Button
 if st.button(" Recommend Assessments") and user_query.strip():
-    st.divider()
     with st.spinner("Generating smart recommendations..."):
         query_embedding = model.encode(user_query, convert_to_tensor=True)
         hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=top_k)[0]
