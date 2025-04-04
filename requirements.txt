@@ -5,6 +5,5 @@ pandas
 numpy
 sentence-transformers==2.2.2
 scikit-learn
-torch
 huggingface_hub==0.16.4
 
