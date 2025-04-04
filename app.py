@@ -1,61 +1,64 @@
 import streamlit as st
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
-import numpy as np
-import json
+from sentence_transformers import SentenceTransformer, util
 
-# Load SentenceTransformer model
 @st.cache_resource
 def load_model():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
 model = load_model()
 
-# Load SHL assessment metadata (update this to your actual path or source)
 @st.cache_data
-def load_assessment_data():
+def load_data():
     df = pd.read_csv("shl_assessments.csv")
+    df.fillna("Not Available", inplace=True)
+    df["combined_text"] = (
+        df["Assessment Name"].astype(str)
+        + " "
+        + df["Test Type"].astype(str)
+        + " "
+        + df["Remote Testing"].astype(str)
+        + " "
+        + df["Adaptive/IRT"].astype(str)
+    )
+    df["embedding"] = df["combined_text"].apply(lambda x: model.encode(x, convert_to_tensor=True))
     return df
 
-df = load_assessment_data()
+df = load_data()
 
-# Generate embeddings for assessments (on description or combined fields)
-@st.cache_data
-def generate_embeddings(df):
-    texts = df["description"].fillna("").tolist()  # or combine multiple fields if needed
-    embeddings = model.encode(texts, show_progress_bar=True)
-    return np.array(embeddings)
+# UI
+st.set_page_config(page_title="SHL Assessment Recommendation Engine")
+st.title("🔍 SHL Assessment Recommendation System")
+st.markdown("Enter a job description or hiring query below:")
 
-assessment_embeddings = generate_embeddings(df)
+query = st.text_area("Job Description / Query", height=200)
+top_k = st.slider("Number of recommendations", 1, 10, 5)
 
-# Streamlit UI
-st.title("🔍 SHL Assessment Recommendation Engine")
-query = st.text_area("Enter job description or query here:", height=200)
-
-if st.button("Recommend Assessments"):
-    if not query.strip():
-        st.warning("Please enter a valid query.")
+if st.button("Recommend"):
+    if query.strip() == "":
+        st.warning("Please enter a query or job description.")
     else:
         with st.spinner("Generating recommendations..."):
-            query_embedding = model.encode([query])
-            similarities = cosine_similarity(query_embedding, assessment_embeddings)[0]
-            top_k = 10
-            indices = similarities.argsort()[-top_k:][::-1]
+            query_embedding = model.encode(query, convert_to_tensor=True)
+            scores = df["embedding"].apply(lambda x: util.cos_sim(query_embedding, x).item())
+            df["score"] = scores
+            results = df.sort_values("score", ascending=False).head(top_k)
 
-            # Prepare and display recommendations
-            results = []
-            for i in indices:
-                row = df.iloc[i]
-                results.append({
-                    "Assessment Name": f"[{row['name']}]({row['url']})",
-                    "Remote Testing Support": row.get("remote_support", "Unknown"),
-                    "Adaptive/IRT Support": row.get("adaptive_support", "Unknown"),
-                    "Duration": row.get("duration", "N/A"),
-                    "Test Type": row.get("test_type", "N/A"),
-                    "Relevance Score": f"{similarities[i]:.2f}"
-                })
+            st.success(f"Top {top_k} recommended assessments:")
+            st.dataframe(
+                results[[
+                    "Assessment Name", "URL", "Remote Testing",
+                    "Adaptive/IRT", "Test Type"
+                ]].reset_index(drop=True)
+            )
 
-            results_df = pd.DataFrame(results)
-            st.markdown("### 📋 Top Recommendations")
-            st.dataframe(results_df, use_container_width=True)
+            st.markdown("### 📋 Recommendations with Links")
+            for idx, row in results.iterrows():
+                st.markdown(f"""
+**[{row['Assessment Name']}]({row['URL']})**
+
+- **Remote Testing:** {row['Remote Testing']}
+- **Adaptive/IRT:** {row['Adaptive/IRT']}
+- **Test Type:** {row['Test Type']}
+---
+""")
