@@ -37,6 +37,8 @@ with st.expander(" Example Queries"):
 
 #  User Input
 st.subheader("📋 Paste a job description or skill query")
+user_query = st.text_area("🧑‍💻 Job Description or Role Query", height=150)
+
 # 🎚 Slider & filters
 st.subheader(" How many recommendations do you want?")
 top_k = st.slider("", min_value=1, max_value=10, value=5)
