@@ -45,8 +45,8 @@ user_query = st.text_area("📋 Paste a job description or skill query", height=
 st.subheader(" How many recommendations do you want?")
 top_k = st.slider("", min_value=1, max_value=10, value=5)
 
-st.checkbox(" Remote-enabled only", help="Only show assessments that support remote testing")
-st.checkbox(" Simulation-type only (S)", help="Only show assessments labeled as type S")
+remote_only = st.checkbox(" Remote-enabled only", help="Only show assessments that support remote testing")
+simulation_only = st.checkbox(" Simulation-type only (S)", help="Only show assessments labeled as type S")
 
 #  Trigger Button
 if st.button(" Recommend Assessments") and user_query.strip():
