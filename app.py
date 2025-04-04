@@ -35,9 +35,9 @@ st.title("🔍 SHL Assessment Recommendation Engine")
 st.markdown("Paste a **job description or skill query** below to get tailored SHL test suggestions:")
 
 user_query = st.text_area("📝 Job Description or Role Query", height=150)
-top_k = st.slider("📌 How many recommendations do you want?", 1, 10, 5)
+top_k = st.slider(" How many recommendations do you want?", 1, 10, 5)
 
-if st.button("🚀 Recommend Assessments") and user_query.strip():
+if st.button(" Recommend Assessments") and user_query.strip():
     with st.spinner("Thinking hard... 🧠"):
         query_embedding = model.encode(user_query, convert_to_tensor=True)
         hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=top_k)[0]
@@ -56,6 +56,3 @@ if st.button("🚀 Recommend Assessments") and user_query.strip():
 
         st.markdown("### 🔎 Top Recommendations")
         st.dataframe(pd.DataFrame(recommendations).drop(columns=["Score"]))
-
-st.markdown("---")
-st.caption("Built with ❤️ using Sentence Transformers and Streamlit")
