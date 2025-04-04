@@ -59,12 +59,14 @@ if st.button(" Recommend Assessments") and user_query.strip():
             i = hit["corpus_id"]
             row = df.iloc[i]
             result = {
-                "Assessment Name": f"[{row['Assessment Name']}]({row['URL']})",
-                "Remote Testing": row["Remote Testing"],
-                "Adaptive/IRT": row["Adaptive/IRT"],
-                "Test Type": row["Test Type"],
-                "Score": round(hit["score"], 4),
-            }
+                 "Assessment Name": f"[{row['Assessment Name']}]({row['URL']})",
+                 "Remote Testing": row["Remote Testing"],
+                 "Adaptive/IRT": row["Adaptive/IRT"],
+                 "Duration": row["Duration"],  
+                 "Test Type": row["Test Type"],
+                 "Score": round(hit["score"], 4),
+             }
+
 
             #  Apply filters
             if remote_only and result["Remote Testing"].lower() != "yes":
