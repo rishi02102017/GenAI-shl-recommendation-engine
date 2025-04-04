@@ -1,67 +1,45 @@
 import streamlit as st
 import pandas as pd
-import torch
 from sentence_transformers import SentenceTransformer, util
 
-# Load model
-@st.cache_resource
-def load_model():
-    return SentenceTransformer("all-MiniLM-L6-v2")
+# Load SHL assessments from CSV
+df = pd.read_csv("shl_assessments.csv")
 
-model = load_model()
+# Fill NaN values (if any)
+df.fillna("Not Available", inplace=True)
 
-# Load CSV and compute embeddings
+# Compute embeddings only once and cache
 @st.cache_data
-def load_data():
-    df = pd.read_csv("shl_assessments.csv")
-    df.fillna("Not Available", inplace=True)
-    df["combined_text"] = (
-        df["Assessment Name"].astype(str)
-        + " "
-        + df["Test Type"].astype(str)
-        + " "
-        + df["Remote Testing"].astype(str)
-        + " "
-        + df["Adaptive/IRT"].astype(str)
-    )
-    embeddings = model.encode(df["combined_text"].tolist(), convert_to_tensor=True)
-    return df, embeddings
+def load_embeddings():
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    corpus_embeddings = model.encode(df["Assessment Name"].tolist(), convert_to_tensor=True)
+    return model, corpus_embeddings
 
-df, assessment_embeddings = load_data()
+model, corpus_embeddings = load_embeddings()
 
 # Streamlit UI
-st.set_page_config(page_title="SHL Assessment Recommendation Engine")
-st.title("🔍 SHL Assessment Recommendation System")
-st.markdown("Enter a job description or hiring query below:")
+st.title("🔍 SHL Assessment Recommendation Engine")
 
-query = st.text_area("Job Description / Query", height=200)
-top_k = st.slider("Number of recommendations", 1, 10, 5)
+user_query = st.text_area("Paste a job description or query here", height=150)
+top_k = st.slider("How many recommendations do you want?", min_value=1, max_value=10, value=5)
 
-if st.button("Recommend"):
-    if query.strip() == "":
-        st.warning("Please enter a query or job description.")
-    else:
-        with st.spinner("Finding recommendations..."):
-            query_embedding = model.encode(query, convert_to_tensor=True)
-            cos_scores = util.pytorch_cos_sim(query_embedding, assessment_embeddings)[0]
-            top_results = torch.topk(cos_scores, k=top_k)
+if st.button("Recommend Assessments"):
+    with st.spinner("Generating recommendations..."):
+        query_embedding = model.encode(user_query, convert_to_tensor=True)
+        hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=top_k)[0]
 
-            results_df = df.iloc[top_results[1].cpu().numpy()]
-            results_df = results_df.reset_index(drop=True)
+        results = []
+        for hit in hits:
+            i = hit["corpus_id"]
+            score = hit["score"]
+            row = df.iloc[i]
+            results.append({
+                "Assessment Name": f"[{row['Assessment Name']}]({row['URL']})",
+                "Remote Testing": row["Remote Testing"],
+                "Adaptive/IRT": row["Adaptive/IRT"],
+                "Test Type": row["Test Type"],
+                "Score": round(score, 4),
+            })
 
-            st.success(f"Top {top_k} recommended assessments:")
-            st.dataframe(results_df[[
-                "Assessment Name", "URL", "Remote Testing",
-                "Adaptive/IRT", "Test Type"
-            ]])
-
-            st.markdown("### 📋 Recommendations with Links")
-            for idx, row in results_df.iterrows():
-                st.markdown(f"""
-**[{row['Assessment Name']}]({row['URL']})**
-
-- **Remote Testing:** {row['Remote Testing']}
-- **Adaptive/IRT:** {row['Adaptive/IRT']}
-- **Test Type:** {row['Test Type']}
----
-""")
+        st.markdown("### 🔎 Top Recommendations")
+        st.dataframe(pd.DataFrame(results).drop(columns=["Score"]))  # Hide score column if not needed
