@@ -76,6 +76,7 @@ if st.button(" Recommend Assessments") and user_query.strip():
 
         #  Final Display
         if results:
+            st.divider()
             st.markdown("## 🔎 Top Recommendations")
             st.dataframe(pd.DataFrame(results).drop(columns=["Score"]))
         else:
