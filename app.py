@@ -33,10 +33,12 @@ with st.expander(" Example Queries"):
     - Need someone with **UI/UX skills** using Adobe tools  
     - Looking for a **Data Analyst** familiar with Excel  
     """)
+    st.divider()
 
 #  User Input
 st.markdown("### 📋 Paste a **job description** or **skill query** below to get tailored SHL test suggestions:")
 user_query = st.text_area("🧑‍💻 Job Description or Role Query", height=150)
+st.divider()
 
 # 🎚 Slider & filters
 st.markdown("###  How many recommendations do you want?")
@@ -47,6 +49,7 @@ simulation_only = st.checkbox(" Only show Simulation-type tests (S)")
 
 #  Trigger Button
 if st.button(" Recommend Assessments") and user_query.strip():
+    st.divider()
     with st.spinner("Generating smart recommendations..."):
         query_embedding = model.encode(user_query, convert_to_tensor=True)
         hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=top_k)[0]
