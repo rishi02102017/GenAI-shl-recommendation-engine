@@ -4,4 +4,4 @@ numpy
 sentence-transformers==2.2.2
 scikit-learn
 torch
-huggingface_hub>=0.12.0
+huggingface_hub==0.16.4
