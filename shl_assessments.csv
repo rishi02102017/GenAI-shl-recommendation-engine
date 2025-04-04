@@ -1,21 +1,21 @@
-Assessment Name,URL,Remote Testing ,Adaptive/IRT,Test Type
-Global Skills Development Report,https://www.shl.com/solutions/products/product-catalog/view/global-skills-development-report/,Yes,No,"A, E, B, C, D, P"
-.NET Framework 4.5,https://www.shl.com/solutions/products/product-catalog/view/net-framework-4-5/,Yes,Yes,K
-.NET MVC (New),https://www.shl.com/solutions/products/product-catalog/view/net-mvc-new/,Yes,No,K
-.NET MVVM (New),https://www.shl.com/solutions/products/product-catalog/view/net-mvvm-new/,Yes,No,K
-.NET WCF (New),https://www.shl.com/solutions/products/product-catalog/view/net-wcf-new/,Yes,No,K
-.NET WPF (New),https://www.shl.com/solutions/products/product-catalog/view/net-wpf-new/,Yes,No,K
-.NET XAML (New),https://www.shl.com/solutions/products/product-catalog/view/net-xaml-new/,Yes,No,K
-Accounts Payable (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-payable-new/,Yes,No,K
-Accounts Payable Simulation (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-payable-simulation-new/,Yes,No,S
-Accounts Receivable (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-receivable-new/,Yes,No,K
-Accounts Receivable Simulation (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-receivable-simulation-new/,Yes,No,S
-ADO.NET (New),https://www.shl.com/solutions/products/product-catalog/view/ado-net-new/,Yes,No,K
-Adobe Experience Manager (New),https://www.shl.com/solutions/products/product-catalog/view/adobe-experience-manager-new/,Yes,No,K
-Adobe Photoshop CC,https://www.shl.com/solutions/products/product-catalog/view/adobe-photoshop-cc/,Yes,Yes,K
-Aeronautical Engineering (New),https://www.shl.com/solutions/products/product-catalog/view/aeronautical-engineering-new/,Yes,No,K
-Aerospace Engineering (New),https://www.shl.com/solutions/products/product-catalog/view/aerospace-engineering-new/,Yes,No,K
-Agile Software Development,https://www.shl.com/solutions/products/product-catalog/view/agile-software-development/,Yes,No,K
-Agile Testing (New),https://www.shl.com/solutions/products/product-catalog/view/agile-testing-new/,Yes,No,K
-AI Skills,https://www.shl.com/solutions/products/product-catalog/view/ai-skills/,Yes,No,P
-Amazon Web Services (AWS) Development (New),https://www.shl.com/solutions/products/product-catalog/view/amazon-web-services-aws-development-new/,Yes,No,K
+Assessment Name,URL,Remote Testing ,Adaptive/IRT,Test Type,Duration
+Global Skills Development Report,https://www.shl.com/solutions/products/product-catalog/view/global-skills-development-report/,Yes,No,"A, E, B, C, D, P",60 mins
+.NET Framework 4.5,https://www.shl.com/solutions/products/product-catalog/view/net-framework-4-5/,Yes,Yes,K,45 mins
+.NET MVC (New),https://www.shl.com/solutions/products/product-catalog/view/net-mvc-new/,Yes,No,K,40 mins
+.NET MVVM (New),https://www.shl.com/solutions/products/product-catalog/view/net-mvvm-new/,Yes,No,K,35 mins
+.NET WCF (New),https://www.shl.com/solutions/products/product-catalog/view/net-wcf-new/,Yes,No,K,40 mins
+.NET WPF (New),https://www.shl.com/solutions/products/product-catalog/view/net-wpf-new/,Yes,No,K,30 mins
+.NET XAML (New),https://www.shl.com/solutions/products/product-catalog/view/net-xaml-new/,Yes,No,K,45 mins
+Accounts Payable (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-payable-new/,Yes,No,K,45 mins
+Accounts Payable Simulation (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-payable-simulation-new/,Yes,No,S,50 mins
+Accounts Receivable (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-receivable-new/,Yes,No,K,30 mins
+Accounts Receivable Simulation (New),https://www.shl.com/solutions/products/product-catalog/view/accounts-receivable-simulation-new/,Yes,No,S,55 mins
+ADO.NET (New),https://www.shl.com/solutions/products/product-catalog/view/ado-net-new/,Yes,No,K,45 mins
+Adobe Experience Manager (New),https://www.shl.com/solutions/products/product-catalog/view/adobe-experience-manager-new/,Yes,No,K,35 mins
+Adobe Photoshop CC,https://www.shl.com/solutions/products/product-catalog/view/adobe-photoshop-cc/,Yes,Yes,K,40 mins
+Aeronautical Engineering (New),https://www.shl.com/solutions/products/product-catalog/view/aeronautical-engineering-new/,Yes,No,K,45 mins
+Aerospace Engineering (New),https://www.shl.com/solutions/products/product-catalog/view/aerospace-engineering-new/,Yes,No,K,30 mins
+Agile Software Development,https://www.shl.com/solutions/products/product-catalog/view/agile-software-development/,Yes,No,K,35 mins
+Agile Testing (New),https://www.shl.com/solutions/products/product-catalog/view/agile-testing-new/,Yes,No,K,40mins
+AI Skills,https://www.shl.com/solutions/products/product-catalog/view/ai-skills/,Yes,No,P,25 mins
+Amazon Web Services (AWS) Development (New),https://www.shl.com/solutions/products/product-catalog/view/amazon-web-services-aws-development-new/,Yes,No,K,40 mins
