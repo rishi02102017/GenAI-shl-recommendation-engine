@@ -3,7 +3,10 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 
 #  Page Config
-st.set_page_config(page_title="SHL Assessment Recommendation Engine", page_icon="🔍", layout="centered")
+st.set_page_config(page_title="SHL Assessment Recommendation Engine", layout="centered")
+st.title("🔍 SHL Assessment Recommendation Engine")
+st.markdown("Helping you match SHL tests to your job roles in seconds 🚀")
+
 
 #  Load SHL assessments
 df = pd.read_csv("shl_assessments.csv")
@@ -36,7 +39,7 @@ st.markdown("### 📋 Paste a **job description** or **skill query** below to ge
 user_query = st.text_area("🧑‍💻 Job Description or Role Query", height=150)
 
 # 🎚 Slider & filters
-st.markdown("### 🎯 How many recommendations do you want?")
+st.markdown("###  How many recommendations do you want?")
 top_k = st.slider("", min_value=1, max_value=10, value=5)
 
 remote_only = st.checkbox(" Only show Remote-enabled tests")
