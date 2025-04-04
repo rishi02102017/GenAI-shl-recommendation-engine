@@ -1,13 +1,16 @@
 import streamlit as st
 import pandas as pd
+import torch
 from sentence_transformers import SentenceTransformer, util
 
+# Load model
 @st.cache_resource
 def load_model():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
 model = load_model()
 
+# Load CSV and compute embeddings
 @st.cache_data
 def load_data():
     df = pd.read_csv("shl_assessments.csv")
@@ -21,12 +24,12 @@ def load_data():
         + " "
         + df["Adaptive/IRT"].astype(str)
     )
-    df["embedding"] = df["combined_text"].apply(lambda x: model.encode(x, convert_to_tensor=True))
-    return df
+    embeddings = model.encode(df["combined_text"].tolist(), convert_to_tensor=True)
+    return df, embeddings
 
-df = load_data()
+df, assessment_embeddings = load_data()
 
-# UI
+# Streamlit UI
 st.set_page_config(page_title="SHL Assessment Recommendation Engine")
 st.title("🔍 SHL Assessment Recommendation System")
 st.markdown("Enter a job description or hiring query below:")
@@ -38,22 +41,22 @@ if st.button("Recommend"):
     if query.strip() == "":
         st.warning("Please enter a query or job description.")
     else:
-        with st.spinner("Generating recommendations..."):
+        with st.spinner("Finding recommendations..."):
             query_embedding = model.encode(query, convert_to_tensor=True)
-            scores = df["embedding"].apply(lambda x: util.cos_sim(query_embedding, x).item())
-            df["score"] = scores
-            results = df.sort_values("score", ascending=False).head(top_k)
+            cos_scores = util.pytorch_cos_sim(query_embedding, assessment_embeddings)[0]
+            top_results = torch.topk(cos_scores, k=top_k)
+
+            results_df = df.iloc[top_results[1].cpu().numpy()]
+            results_df = results_df.reset_index(drop=True)
 
             st.success(f"Top {top_k} recommended assessments:")
-            st.dataframe(
-                results[[
-                    "Assessment Name", "URL", "Remote Testing",
-                    "Adaptive/IRT", "Test Type"
-                ]].reset_index(drop=True)
-            )
+            st.dataframe(results_df[[
+                "Assessment Name", "URL", "Remote Testing",
+                "Adaptive/IRT", "Test Type"
+            ]])
 
             st.markdown("### 📋 Recommendations with Links")
-            for idx, row in results.iterrows():
+            for idx, row in results_df.iterrows():
                 st.markdown(f"""
 **[{row['Assessment Name']}]({row['URL']})**
 
