@@ -2,57 +2,75 @@ import streamlit as st
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 
-st.set_page_config(page_title="SHL Recommendation Engine", layout="centered")
+#  Page Config
+st.set_page_config(page_title="SHL Assessment Recommendation Engine", page_icon="🔍", layout="centered")
 
-# === Load Data ===
+#  Load SHL assessments
 df = pd.read_csv("shl_assessments.csv")
-
-# Clean column names and fill missing values
-df.columns = df.columns.str.strip()
+df.columns = df.columns.str.strip()  # Strip column names
 df.fillna("Not Available", inplace=True)
 
-# Create rich descriptions for embeddings
-df["Full Description"] = (
-    df["Assessment Name"].astype(str) + " " +
-    df["Test Type"].astype(str) + " " +
-    df["Remote Testing"].astype(str) + " " +
-    df["Adaptive/IRT"].astype(str)
-)
+#  Create a richer field for embedding
+df["Full Description"] = df["Assessment Name"] + " " + df["Test Type"]
 
-# === Load model + cache embeddings ===
+#  Load model and cache embeddings
 @st.cache_data
-def load_model_and_embeddings():
+def load_embeddings():
     model = SentenceTransformer("all-MiniLM-L6-v2")
-    corpus_embeddings = model.encode(
-        df["Full Description"].tolist(), convert_to_tensor=True
-    )
-    return model, corpus_embeddings
+    embeddings = model.encode(df["Full Description"].tolist(), convert_to_tensor=True)
+    return model, embeddings
 
-model, corpus_embeddings = load_model_and_embeddings()
+model, corpus_embeddings = load_embeddings()
 
-# === Streamlit UI ===
-st.title("🔍 SHL Assessment Recommendation Engine")
-st.markdown("Paste a **job description or skill query** below to get tailored SHL test suggestions:")
+#  Sidebar or example prompts
+with st.expander(" Example Queries"):
+    st.markdown("""
+    - Looking for a **Java backend developer**  
+    - Hiring a **DevOps engineer** with AWS and Docker  
+    - Need someone with **UI/UX skills** using Adobe tools  
+    - Looking for a **Data Analyst** familiar with Excel  
+    """)
 
-user_query = st.text_area("📝 Job Description or Role Query", height=150)
-top_k = st.slider(" How many recommendations do you want?", 1, 10, 5)
+#  User Input
+st.markdown("### 📋 Paste a **job description** or **skill query** below to get tailored SHL test suggestions:")
+user_query = st.text_area("🧑‍💻 Job Description or Role Query", height=150)
 
+# 🎚 Slider & filters
+st.markdown("### 🎯 How many recommendations do you want?")
+top_k = st.slider("", min_value=1, max_value=10, value=5)
+
+remote_only = st.checkbox(" Only show Remote-enabled tests")
+simulation_only = st.checkbox(" Only show Simulation-type tests (S)")
+
+#  Trigger Button
 if st.button(" Recommend Assessments") and user_query.strip():
-    with st.spinner("Thinking hard... 🧠"):
+    with st.spinner("Generating smart recommendations..."):
         query_embedding = model.encode(user_query, convert_to_tensor=True)
         hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=top_k)[0]
 
-        recommendations = []
+        results = []
         for hit in hits:
-            idx = hit["corpus_id"]
-            row = df.iloc[idx]
-            recommendations.append({
+            i = hit["corpus_id"]
+            row = df.iloc[i]
+            result = {
                 "Assessment Name": f"[{row['Assessment Name']}]({row['URL']})",
                 "Remote Testing": row["Remote Testing"],
                 "Adaptive/IRT": row["Adaptive/IRT"],
                 "Test Type": row["Test Type"],
                 "Score": round(hit["score"], 4),
-            })
+            }
 
-        st.markdown("### 🔎 Top Recommendations")
-        st.dataframe(pd.DataFrame(recommendations).drop(columns=["Score"]))
+            #  Apply filters
+            if remote_only and result["Remote Testing"].lower() != "yes":
+                continue
+            if simulation_only and "S" not in result["Test Type"]:
+                continue
+
+            results.append(result)
+
+        #  Final Display
+        if results:
+            st.markdown("## 🔎 Top Recommendations")
+            st.dataframe(pd.DataFrame(results).drop(columns=["Score"]))
+        else:
+            st.warning("⚠️ No assessments matched your filters. Try relaxing the filters or modifying the query.")
