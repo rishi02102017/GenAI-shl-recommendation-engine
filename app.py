@@ -5,7 +5,10 @@ from sentence_transformers import SentenceTransformer, util
 #  Page Config
 st.set_page_config(page_title="SHL Assessment Recommendation Engine", layout="centered")
 st.title("🔍 SHL Assessment Recommendation Engine")
-st.markdown("Helping you match SHL tests to your job roles in seconds 🚀")
+st.markdown(
+    "<span style='color:gray'>Helping you match SHL tests to your job roles in seconds 🚀</span>",
+    unsafe_allow_html=True
+)
 
 
 #  Load SHL assessments
