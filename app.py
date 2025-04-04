@@ -2,48 +2,62 @@ import streamlit as st
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 
-# Load SHL assessments
+# === Load Data ===
 df = pd.read_csv("shl_assessments.csv")
 
-# Strip column names to avoid KeyErrors
+# Clean column names and fill missing values
 df.columns = df.columns.str.strip()
-
-# Fill NaN values
 df.fillna("Not Available", inplace=True)
 
-# Create a new field to embed richer info
-df["Full Description"] = df["Assessment Name"] + " " + df["Test Type"]
+# Combine fields to create richer embedding context
+df["Full Description"] = (
+    df["Assessment Name"].astype(str) + " " +
+    df["Test Type"].astype(str) + " " +
+    df["Remote Testing"].astype(str) + " " +
+    df["Adaptive/IRT"].astype(str)
+)
 
+# === Load Model & Embeddings (cached) ===
 @st.cache_data
-def load_embeddings():
+def load_model_and_embeddings():
     model = SentenceTransformer("all-MiniLM-L6-v2")
-    corpus_embeddings = model.encode(df["Full Description"].tolist(), convert_to_tensor=True)
+    corpus_embeddings = model.encode(
+        df["Full Description"].tolist(), convert_to_tensor=True
+    )
     return model, corpus_embeddings
 
-model, corpus_embeddings = load_embeddings()
+model, corpus_embeddings = load_model_and_embeddings()
 
-# UI
+# === Streamlit UI ===
+st.set_page_config(page_title="SHL Recommendation Engine", layout="centered")
 st.title("🔍 SHL Assessment Recommendation Engine")
-user_query = st.text_area("Paste a job description or query here", height=150)
-top_k = st.slider("How many recommendations do you want?", min_value=1, max_value=10, value=5)
 
-if st.button("Recommend Assessments") and user_query.strip():
-    with st.spinner("Generating recommendations..."):
+st.markdown("Paste a **job description or skill query** below to get tailored SHL test suggestions:")
+
+user_query = st.text_area("📝 Job Description or Role Query", height=150)
+top_k = st.slider("📌 How many recommendations do you want?", 1, 10, 5)
+
+# === Recommend Logic ===
+if st.button("🚀 Recommend Assessments") and user_query.strip():
+    with st.spinner("Thinking hard... 🧠"):
         query_embedding = model.encode(user_query, convert_to_tensor=True)
         hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=top_k)[0]
 
-        results = []
+        recommendations = []
         for hit in hits:
-            i = hit["corpus_id"]
-            score = hit["score"]
-            row = df.iloc[i]
-            results.append({
+            idx = hit["corpus_id"]
+            row = df.iloc[idx]
+            recommendations.append({
                 "Assessment Name": f"[{row['Assessment Name']}]({row['URL']})",
                 "Remote Testing": row["Remote Testing"],
                 "Adaptive/IRT": row["Adaptive/IRT"],
                 "Test Type": row["Test Type"],
-                "Score": round(score, 4),
+                "Score": round(hit["score"], 4),  # optional debug
             })
 
         st.markdown("### 🔎 Top Recommendations")
-        st.dataframe(pd.DataFrame(results).drop(columns=["Score"]))
+        st.dataframe(pd.DataFrame(recommendations).drop(columns=["Score"]))
+
+# === Footer ===
+st.markdown("---")
+st.caption("Built with ❤️ using Sentence Transformers and Streamlit")
