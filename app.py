@@ -15,9 +15,7 @@ model = load_model()
 # Load SHL assessment metadata (update this to your actual path or source)
 @st.cache_data
 def load_assessment_data():
-    with open("shl_assessments.json", "r") as f:
-        data = json.load(f)
-    df = pd.DataFrame(data)
+    df = pd.read_csv("shl_assessments.csv")
     return df
 
 df = load_assessment_data()
