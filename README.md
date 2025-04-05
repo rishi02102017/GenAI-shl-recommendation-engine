@@ -28,12 +28,12 @@ Hiring managers often struggle to find the right assessments using keyword-based
 
 ```
 SHL/
-├── app.py                         # ✅ Streamlit-based UI
-├── api.py                         # ✅ FastAPI version (used via Gradio)
-├── shl_assessments.csv           # ✅ Manually created from SHL Product Catalog
-├── requirements.txt              # ✅ All dependencies for Streamlit + API
-├── SHL_Final_Submission.ipynb    # ✅ Colab notebook with Gradio API
-├── SHL_1-Page Approach Document.pdf  # ✅ Submission document
+├── app.py                         #  Streamlit-based UI
+├── api.py                         #  FastAPI version (used via Gradio)
+├── shl_assessments.csv           #  Manually created from SHL Product Catalog
+├── requirements.txt              #  All dependencies for Streamlit + API
+├── SHL_Final_Submission.ipynb    #  Colab notebook with Gradio API
+├── SHL_1-Page Approach Document.pdf  #  Submission document
 ```
 
 ---
@@ -64,20 +64,20 @@ SHL/
 
 ## 🚀 Live URLs
 
-- **🧪 Working Demo (Streamlit)**:  
+- ** Working Demo (Streamlit)**:  
   https://shl-recommendation-engine.streamlit.app/
 
 - **🧵 API Endpoint (via Gradio)**:  
   A temporary JSON-returning endpoint is available via Gradio.  
-  ✅ Run the notebook [`SHL_Final_Submission.ipynb`](./SHL_Final_Submission.ipynb) in Colab  
-  ✅ A new URL will be generated (valid for 72 hrs)
+   Run the notebook [`SHL_Final_Submission.ipynb`](./SHL_Final_Submission.ipynb) in Colab  
+   A new URL will be generated (valid for 72 hrs)
 
 - **💻 GitHub Repo**:  
   https://github.com/rishi02102017/shl-recommendation-engine
 
 ---
 
-## 🧠 Evaluation Metrics (Optional)
+## 📊 Evaluation Metrics (Optional)
 
 We computed the following based on sample ground-truth queries:
 
@@ -116,6 +116,16 @@ We explored **multiple deployment methods** for hosting a persistent API, but fa
 Let this tool find the right tests — instantly.
 
 ---
+
+## 👤 Author
+
+**Jyotishman Das**  
+M.Tech Artificial Intelligence – IIT Jodhpur  
+
+- [Portfolio](https://my-portfolio-jyotishman-das-projects.vercel.app)  
+- [LinkedIn](https://www.linkedin.com/in/jyotishmandas85p/)
+
+ ---
 
 ## 📝 License
 
