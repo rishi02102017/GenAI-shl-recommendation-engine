@@ -11,6 +11,10 @@ A GenAI-powered tool to help hiring teams find the **most relevant SHL assessmen
 
 Hiring managers often struggle to find the right assessments using keyword-based filters. Our goal was to **automate SHL test recommendations** using semantic search and language models.
 
+> 📸 **Demo Screenshot (Streamlit UI)**  
+![Streamlit UI Demo](./assets/streamlit_ui_demo1.png)
+
+![Streamlit UI Demo](./assets/streamlit_ui_demo2.png)
 ---
 
 ## 🛠️ Tech Stack
@@ -38,7 +42,7 @@ SHL/
 
 ---
 
-## 📊 Dataset
+## 🤖 Dataset
 
 **Source**: [SHL Product Catalog](https://www.shl.com/solutions/products/product-catalog/)  
 **Format**: Manually curated CSV  
