@@ -1,7 +1,6 @@
 services:
   - type: web
-    name: shl-api
+    name: shl-recommendation-engine
     env: python
-    plan: free
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn api:app --host 0.0.0.0 --port 10000"
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
