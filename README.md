@@ -87,11 +87,12 @@ SHL/
 
 We computed the following based on sample ground-truth queries:
 
-| Metric         | Value |
-|----------------|--------|
-| Recall@3       | 0.778  |
-| MAP@3          | 0.778  |
-
+| Query            | Recall@3 | MAP@3 |
+|------------------|-----------|--------|
+| AWS Developer    | 1.00      | 1.00   |
+| Adobe Designer   | 1.00      | 1.00   |
+| .NET Dev         | 0.33      | 0.33   |
+| **Mean**         | **0.778** | **0.778** |
 ---
 
 ## ⚙️ Hosting & API Attempts
