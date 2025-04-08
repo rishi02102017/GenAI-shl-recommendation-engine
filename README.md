@@ -70,7 +70,7 @@ SHL/
 
 ## 🚀 Live URLs
 
-- ** Working Demo (Streamlit)**:  
+- **Working Demo (Streamlit)**:  
   https://shl-recommendation-engine.streamlit.app/
 
 - **🧵 API Endpoint (via Gradio)**:  
