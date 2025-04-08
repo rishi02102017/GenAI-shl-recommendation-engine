@@ -3,7 +3,7 @@ fastapi
 uvicorn
 pandas
 numpy
-sentence-transformers==2.2.2
+sentence-transformers>=2.3.0
 scikit-learn
 huggingface_hub==0.16.4
-
+torch>=1.10.0
