@@ -22,7 +22,7 @@ df["Full Description"] = df["Assessment Name"] + " " + df["Test Type"]
 #  Load model and cache embeddings
 @st.cache_data
 def load_embeddings():
-    model = SentenceTransformer("all-MiniLM-L6-v2")
+    model = SentenceTransformer("./all-MiniLM-L6-v2")
     embeddings = model.encode(df["Full Description"].tolist(), convert_to_tensor=True)
     return model, embeddings
 
