@@ -1,7 +1,9 @@
 
-# 🔍 SHL Assessment Recommendation Engine
+<h1 align="center"> 🔍 SHL Assessment Recommendation Engine</h1>
 
-![Demo Banner](https://github.com/rishi02102017/shl-recommendation-engine/blob/main/SHL_logo.png)
+<p align="center">
+  <img src="SHL_logo.png" alt="Ekam Logo" width="200"/>
+</p>
 
 A GenAI-powered tool to help hiring teams find the **most relevant SHL assessments** instantly based on **natural language queries**.
 
