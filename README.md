@@ -2,7 +2,7 @@
 <h1 align="center"> 🔍 SHL Assessment Recommendation Engine</h1>
 
 <p align="center">
-  <img src="SHL_logo.png" alt="Ekam Logo" width="500"/>
+  <img src="SHL_logo.png" alt="SHL Logo" width="500"/>
 </p>
 
 A GenAI-powered tool to help hiring teams find the **most relevant SHL assessments** instantly based on **natural language queries**.
